@@ -62,7 +62,7 @@ export const CreateSocialHeaderLeftSideTimeItem = chakra(CkFlex, {
     alignItems: "center",
     marginRight: {
       base: 0,
-      md: "32px",
+      md: "auto",
     },
 
     _last: {

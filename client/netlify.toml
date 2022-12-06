@@ -1,4 +1,10 @@
 [[redirects]]
+   from = "/social/*"
+   to = "/social/[id].html"
+   status = 200
+   force = true
+
+[[redirects]]
    from = "/*"
    to = "/"
    status = 200

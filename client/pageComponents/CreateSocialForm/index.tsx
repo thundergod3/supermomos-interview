@@ -176,12 +176,12 @@ const CreateSocialForm = () => {
 
       const { data } = await createSocial(socialForm);
       setLoading(false);
-      router.push(`/${data?.id}`);
+      router.push(`/social/${data?.id}`);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
-  }, [createSocialData]);
+  }, [createSocial, createSocialData, router]);
 
   const { open, close, Dialog } = useModal({
     modalBody: ChooseBannerModal,

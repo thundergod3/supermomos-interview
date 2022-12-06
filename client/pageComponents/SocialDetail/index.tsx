@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from "react";
-import { Flex, Image as CkImage } from "@chakra-ui/react";
+import { Box, Flex, Image as CkImage } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import SocialsService from "services/SocialsService";
 
 import TitleText from "components/TitleText";
 import NormalText from "components/NormalText";
+import Loading from "components/Loading";
 
 import {
   SocialDetailHeaderInfoContainer,
@@ -37,111 +38,126 @@ const SocialDetail: React.FC = (): ReactElement => {
 
   const router = useRouter();
 
-  const handleGetSocialDetail = useCallback(async (id: string) => {
-    try {
-      setLoading(true);
+  const handleGetSocialDetail = useCallback(
+    async (id: string) => {
+      try {
+        setLoading(true);
 
-      const { data } = await getSocialDetail(id);
+        const { data } = await getSocialDetail(id);
 
-      setSocialDetail(data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  }, []);
+        setSocialDetail(data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+    },
+    [getSocialDetail]
+  );
 
   useEffect(() => {
     if (router?.query?.id) {
       handleGetSocialDetail((router as any)?.query?.id);
     }
-  }, [router?.query?.id]);
+  }, [handleGetSocialDetail, router, router?.query?.id]);
 
   return (
     <SocialPageContainer>
-      <SocialPageHeaderContainer>
-        <SocialDetailHeaderLeftSideContainer>
-          <TitleText
-            className={styles?.title}
-            title={<span>{socialDetail?.title}</span>}
-            width="100%"
+      {loading ? (
+        <Box mt="100px">
+          <Loading />
+        </Box>
+      ) : (
+        <>
+          <SocialPageHeaderContainer>
+            <SocialDetailHeaderLeftSideContainer>
+              <TitleText
+                className={styles?.title}
+                title={<span>{socialDetail?.title}</span>}
+                width="100%"
+              />
+              <SocialDetailHeaderTimeContainer>
+                <SocialDetailHeaderTimeItem>
+                  <Image src={imageCalendar} alt="Calendar" objectFit="cover" />
+                  <NormalText
+                    text={dayjs(socialDetail?.startAt).format("MMMM DD, ddd")}
+                    bold
+                    fontSize="28px"
+                    lineHeight="40px"
+                    color="text.grey.100"
+                    marginLeft="15px"
+                  />
+                </SocialDetailHeaderTimeItem>
+                <SocialDetailHeaderTimeItem>
+                  <Image src={imageClock} alt="Calendar" objectFit="cover" />
+                  <NormalText
+                    text={dayjs(socialDetail?.startAt).format("hA")}
+                    bold
+                    fontSize="28px"
+                    lineHeight="40px"
+                    color="text.grey.100"
+                    marginLeft="15px"
+                  />
+                </SocialDetailHeaderTimeItem>
+              </SocialDetailHeaderTimeContainer>
+              <SocialDetailHeaderInfoContainer>
+                <SocialDetailHeaderInfoItem>
+                  <Image src={imageVenue} alt="Venue" objectFit="cover" />
+                  <NormalText
+                    text={socialDetail?.venue}
+                    bold
+                    fontSize="16px"
+                    color="text.grey.100"
+                    marginLeft="15px"
+                  />
+                </SocialDetailHeaderInfoItem>
+                <Flex alignItems="center">
+                  <SocialDetailHeaderInfoItem>
+                    <Image src={imageGroup} alt="Group" objectFit="cover" />
+                    <NormalText
+                      text={`${socialDetail?.capacity} people`}
+                      bold
+                      fontSize="16px"
+                      color="text.grey.100"
+                      marginLeft="12px"
+                    />
+                  </SocialDetailHeaderInfoItem>
+                  <SocialDetailHeaderInfoItem>
+                    <Image
+                      src={imageCurrency}
+                      alt="Currency"
+                      objectFit="cover"
+                    />
+                    <NormalText
+                      text={"$" + socialDetail?.price}
+                      bold
+                      fontSize="16px"
+                      color="text.grey.100"
+                      marginLeft="12px"
+                    />
+                  </SocialDetailHeaderInfoItem>
+                </Flex>
+              </SocialDetailHeaderInfoContainer>
+            </SocialDetailHeaderLeftSideContainer>
+            <SocialDetailHeaderRightSideContainer>
+              <CkImage
+                src={socialDetail?.banner}
+                alt="Banner Image"
+                loading="lazy"
+                borderRadius="0px 64px"
+                height="445px"
+                width="100%"
+              />
+            </SocialDetailHeaderRightSideContainer>
+          </SocialPageHeaderContainer>
+          <NormalText
+            text={socialDetail?.description}
+            fontSize="16px"
+            color="text.grey.100"
+            marginTop="24px"
           />
-          <SocialDetailHeaderTimeContainer>
-            <SocialDetailHeaderTimeItem>
-              <Image src={imageCalendar} alt="Calendar" objectFit="cover" />
-              <NormalText
-                text={dayjs().format("MMMM DD, ddd")}
-                bold
-                fontSize="28px"
-                lineHeight="40px"
-                color="text.grey.100"
-                marginLeft="15px"
-              />
-            </SocialDetailHeaderTimeItem>
-            <SocialDetailHeaderTimeItem>
-              <Image src={imageClock} alt="Calendar" objectFit="cover" />
-              <NormalText
-                text={dayjs().format("hA")}
-                bold
-                fontSize="28px"
-                lineHeight="40px"
-                color="text.grey.100"
-                marginLeft="15px"
-              />
-            </SocialDetailHeaderTimeItem>
-          </SocialDetailHeaderTimeContainer>
-          <SocialDetailHeaderInfoContainer>
-            <SocialDetailHeaderInfoItem>
-              <Image src={imageVenue} alt="Venue" objectFit="cover" />
-              <NormalText
-                text={socialDetail?.venue}
-                bold
-                fontSize="16px"
-                color="text.grey.100"
-                marginLeft="15px"
-              />
-            </SocialDetailHeaderInfoItem>
-            <Flex alignItems="center">
-              <SocialDetailHeaderInfoItem>
-                <Image src={imageGroup} alt="Group" objectFit="cover" />
-                <NormalText
-                  text={`${socialDetail?.capacity}people`}
-                  bold
-                  fontSize="16px"
-                  color="text.grey.100"
-                  marginLeft="12px"
-                />
-              </SocialDetailHeaderInfoItem>
-              <SocialDetailHeaderInfoItem>
-                <Image src={imageCurrency} alt="Currency" objectFit="cover" />
-                <NormalText
-                  text={"$" + socialDetail?.price}
-                  bold
-                  fontSize="16px"
-                  color="text.grey.100"
-                  marginLeft="12px"
-                />
-              </SocialDetailHeaderInfoItem>
-            </Flex>
-          </SocialDetailHeaderInfoContainer>
-        </SocialDetailHeaderLeftSideContainer>
-        <SocialDetailHeaderRightSideContainer>
-          <CkImage
-            src={socialDetail?.banner}
-            alt="Banner Image"
-            loading="lazy"
-            borderRadius="0px 64px"
-            height="445px"
-            width="100%"
-          />
-        </SocialDetailHeaderRightSideContainer>
-      </SocialPageHeaderContainer>
-      <NormalText
-        text={socialDetail?.description}
-        fontSize="16px"
-        color="text.grey.100"
-        marginTop="24px"
-      />
+        </>
+      )}
     </SocialPageContainer>
   );
 };

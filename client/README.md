@@ -6,6 +6,7 @@
 
 - Create Social
 - View Social Detail
+- Public URL: https://bejewelled-rabanadas-687ae2.netlify.app/
 
 ## Technologies
 

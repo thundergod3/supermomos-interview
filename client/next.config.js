@@ -2,6 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-}
+  // Fixing Netlify build
+  images: {
+    unoptimized: true,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
